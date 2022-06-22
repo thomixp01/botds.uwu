@@ -20,7 +20,7 @@ module.exports = {
         console.log(res);
 
 
-        fs.appendFile('log.txt', '\r\n'+ res, function (err) {
+        fs.appendFile('../log.txt', '\r\n'+ res, function (err) {
             if (err) {
               // append failed
             } else {
