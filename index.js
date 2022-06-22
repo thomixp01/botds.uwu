@@ -1,36 +1,76 @@
-const  config = require("./config.js");
+
+const config = require("./config.js");
 
 const Discord = require('discord.js');
+const bot = new Discord.Client();
+bot.commands = new Discord.Collection();
+bot.config = {
+    prefix: config.PREFIX, // Your bot prefix
+    color: config.EMBED_COLORS.BOT_EMBED // Color for the embeds
+}
+
 const { MessageEmbed } = require('discord.js');
 
 const fs = require('fs');
+const { readdirSync } = require('fs');
 const db = require("quick.db");
+const mongoose = require('mongoose');
 const fetch = require ('cross-fetch');
 
-
-const client = new Discord.Client();
-
 const { nivelesTh } = require("./src/commands/nivel/niveles.js");
-const { Commands } = require("./src/commands/commands.js");
+const { Log } = require("./src/commands/utilidades/log.js");
+const { isArgumentsObject } = require("util/types");
 
 const prefix = config.PREFIX;
-const TOKEN = config.TOKEN;
+const { TOKENTHOMIUWU } = require("../Token.js");
 const TENORKEY = config.TENORKEY;
+databasemongoo();
+async function databasemongoo(){
+  await mongoose.connect('mongodb+srv://thomiuwu.jup0r.mongodb.net/?').then(() =>{
+    console.log(
+      '       ╔════════════════╗\n\
+       ║  DataBase :D   ║\n\
+       ╚════════════════╝'
+    );
+  });
+}
 
 
-
-client.login(TOKEN).then(function(res) {
-  client.user.setStatus('online');
-  client.user.setActivity(`Connecting...   |   -help`);  
+bot.login(TOKENTHOMIUWU).then(function(res) {
+  bot.user.setStatus('online');
+  bot.user.setActivity(`Connecting...   |   -help`);
 });
 //////////// TENOR
 
+// Commands
+for (const subFolder of readdirSync(`${__dirname}/src/commands/`)) {
+  for (const fileName of readdirSync(`${__dirname}/src/commands/${subFolder}/`)) {
+      let file = require(`${__dirname}/src/commands/${subFolder}/${fileName}`);
 
-/////////////////////////////////////////COMANDOS////////////////////////////////////////////////////////
-client.on("message", (message) => {
+      bot.commands.set(file.name, file);
+  }
+}
 
-  
-  ///////////////////////////////QUE///////////////////////////////////////
+// Events
+for (const fileName of readdirSync(`${__dirname}/events/`)) {
+  let file = require(`${__dirname}/events/${fileName}`);
+  let eventEmiter = file.emiter;
+
+  bot[eventEmiter](file.name, file.run.bind(null, bot));
+}
+
+
+Saves();
+
+async function Saves(){
+  let botlogs = await db.get("botinfo.log");
+  config.FUNCIONES.LOG = botlogs;
+  console.log("Save succesfull");
+}
+
+
+
+bot.on("message", (message) => {
   if (message.content.startsWith("que")) {
     message.react('🤔');
     message.channel.send({
@@ -43,22 +83,17 @@ client.on("message", (message) => {
         },
       }
     })
+return;}
+let args = message.content.trim().split(/ +/g);
+
+  if (!message.content.startsWith(prefix)) {
+    if(config.FUNCIONES.LOG){Log(message, args);}
+    if(config.FUNCIONES.NIVELES){nivelesTh(message);}
+
     return;
   }
 
-  /////////////////////////////
-  if (!message.content.startsWith(prefix)) {
-    nivelesTh(message);
-    return;
-  }
-  Commands(message);
+
+
   ////FINAL////
 });
-
-
-
-client.on('ready', () => console.log(
-  '   ╔════════════════╗\n\
-   ║  BOT ACTIVO :D ║\n\
-   ╚════════════════╝'
-));

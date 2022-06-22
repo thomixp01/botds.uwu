@@ -163,7 +163,7 @@ const settings = {
 }
 
 // On "Message" Event! //
-client.on('message', async message => {
+client.on('messageCreate', async (message) => {
 
   // Checks if message channel is NSFW! //
   if (!message.channel.nsfw) return message.channel.send('Sorry! Not NSFW Channel!');
@@ -181,7 +181,7 @@ client.on('message', async message => {
 
     // For Embed //
     embed.setImage(await akaneko.lewdNeko());
-    return message.channel.send(embed);
+    return message.channel.send({ embeds: [embed] });
 
     // For Plain Text //
     return message.channel.send(await akaneko.lewdNeko());
@@ -190,7 +190,7 @@ client.on('message', async message => {
 
     // For Embed //
     embed.setImage(await akaneko.nsfw.maid());
-    return message.channel.send(embed);
+    return message.channel.send({ embeds: [embed] });
 
     // For Plain Text //
     return message.channel.send(await akaneko.nsfw.maid());
@@ -212,9 +212,6 @@ client.on('message', async message => {
 
 ## Sources
 I hand picked most of the images from the following: Discord Servers, Konachan, Patreon, Friends sending me, nHentai, etc.
-
-## Contributing
-You can contribute images by sending a list of images of a certain topic, in a JSON file to me @Ryumin#6263 (That's my discord)
 
 ## Support
 [Discord Server](https://discord.gg/DxHvWwC)
