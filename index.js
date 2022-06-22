@@ -1,7 +1,7 @@
-
 const config = require("./config.js");
 
 const Discord = require('discord.js');
+
 const bot = new Discord.Client();
 bot.commands = new Discord.Collection();
 bot.config = {
@@ -22,7 +22,7 @@ const { Log } = require("./src/commands/utilidades/log.js");
 const { isArgumentsObject } = require("util/types");
 
 const prefix = config.PREFIX;
-const { TOKENTHOMIUWU } = require("../Token.js");
+const TOKEN = require("../Token.js").TOKENTHOMIUWU; //Replace for you token bot
 const TENORKEY = config.TENORKEY;
 databasemongoo();
 async function databasemongoo(){
@@ -36,13 +36,15 @@ async function databasemongoo(){
 }
 
 
-bot.login(TOKENTHOMIUWU).then(function(res) {
+bot.login(TOKEN).then(function(res) {
   bot.user.setStatus('online');
-  bot.user.setActivity(`Connecting...   |   -help`);
+  bot.user.setActivity(`Thomiuwu  |   -help`);
 });
 //////////// TENOR
 
 // Commands
+
+
 for (const subFolder of readdirSync(`${__dirname}/src/commands/`)) {
   for (const fileName of readdirSync(`${__dirname}/src/commands/${subFolder}/`)) {
       let file = require(`${__dirname}/src/commands/${subFolder}/${fileName}`);
@@ -51,7 +53,10 @@ for (const subFolder of readdirSync(`${__dirname}/src/commands/`)) {
   }
 }
 
+
 // Events
+
+
 for (const fileName of readdirSync(`${__dirname}/events/`)) {
   let file = require(`${__dirname}/events/${fileName}`);
   let eventEmiter = file.emiter;
@@ -89,10 +94,27 @@ let args = message.content.trim().split(/ +/g);
   if (!message.content.startsWith(prefix)) {
     if(config.FUNCIONES.LOG){Log(message, args);}
     if(config.FUNCIONES.NIVELES){nivelesTh(message);}
-
     return;
-  }
+}
 
+bot.on('error', err => {
+  sendToLogs("Error")
+  console.error(err)
+  process.exit(1);
+});
+
+bot.on('reconnecting', message => {
+  sendToLogs(`User Reconnecting`)
+});
+
+bot.on('resume', message => {
+  sendToLogs(`Connected ${bot.user.tag}`)
+});
+
+bot.on('disconnect', message => {
+  sendToLogs(`User Disconnected`)
+  process.exit(1);
+});
 
 
   ////FINAL////
