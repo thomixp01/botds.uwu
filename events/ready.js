@@ -7,5 +7,6 @@ module.exports = {
              ║  BOT ACTIVO :D ║\n\
              ╚════════════════╝'
           );
+         console.log(bot.uptime)
     }
 }

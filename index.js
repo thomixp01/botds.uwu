@@ -17,8 +17,6 @@ const db = require("quick.db");
 const mongoose = require('mongoose');
 const fetch = require ('cross-fetch');
 
-const { nivelesTh } = require("./src/commands/nivel/niveles.js");
-const { Log } = require("./src/commands/utilidades/log.js");
 const { isArgumentsObject } = require("util/types");
 
 const prefix = config.PREFIX;
@@ -91,12 +89,8 @@ bot.on("message", (message) => {
 return;}
 let args = message.content.trim().split(/ +/g);
 
-  if (!message.content.startsWith(prefix)) {
-    if(config.FUNCIONES.LOG){Log(message, args);}
-    if(config.FUNCIONES.NIVELES){nivelesTh(message);}
-    return;
-}
 
+});
 bot.on('error', err => {
   sendToLogs("Error")
   console.error(err)
@@ -116,6 +110,4 @@ bot.on('disconnect', message => {
   process.exit(1);
 });
 
-
-  ////FINAL////
-});
+////FINAL////
