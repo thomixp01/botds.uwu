@@ -1,13 +1,8 @@
 const config = require("./config.js");
 
 const Discord = require('discord.js');
-
+const { Collection } = require('discord.js');
 const bot = new Discord.Client();
-bot.commands = new Discord.Collection();
-bot.config = {
-    prefix: config.PREFIX, // Your bot prefix
-    color: config.EMBED_COLORS.BOT_EMBED // Color for the embeds
-}
 
 const { MessageEmbed } = require('discord.js');
 
@@ -17,21 +12,26 @@ const db = require("quick.db");
 const mongoose = require('mongoose');
 const fetch = require ('cross-fetch');
 
+
 const { isArgumentsObject } = require("util/types");
 
 const prefix = config.PREFIX;
-const TOKEN = require("../Token.js").TOKENTHOMIUWU; //Replace for you token bot
+const TOKEN = require("../Token.js").TOKENTHOMIUWU; //Token de discord bot
 const TENORKEY = config.TENORKEY;
 databasemongoo();
 async function databasemongoo(){
-  await mongoose.connect('mongodb+srv://thomiuwu.jup0r.mongodb.net/?').then(() =>{
-    console.log(
-      '       ╔════════════════╗\n\
-       ║  DataBase :D   ║\n\
-       ╚════════════════╝'
-    );
-  });
+  await mongoose.connect('mongodb+srv://thomiuwu.jup0r.mongodb.net/?').then(() =>{});
 }
+
+
+//SET COLLECTION
+bot.aliases = new Collection();
+bot.commands = new Collection();
+bot.config = require("./config.js");
+bot.config = { prefix: config.PREFIX, }// El prefix de tu bot
+
+
+
 
 
 bot.login(TOKEN).then(function(res) {
@@ -48,17 +48,16 @@ for (const subFolder of readdirSync(`${__dirname}/src/commands/`)) {
       let file = require(`${__dirname}/src/commands/${subFolder}/${fileName}`);
 
       bot.commands.set(file.name, file);
+      bot.aliases.set(file.alias, file);
+
   }
 }
-
-
 // Events
 
 
 for (const fileName of readdirSync(`${__dirname}/events/`)) {
   let file = require(`${__dirname}/events/${fileName}`);
   let eventEmiter = file.emiter;
-
   bot[eventEmiter](file.name, file.run.bind(null, bot));
 }
 

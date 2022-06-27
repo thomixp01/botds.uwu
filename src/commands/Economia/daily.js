@@ -10,7 +10,7 @@ const cooldown = require("command-cooldown");
 color = config.EMBED_COLORS
 module.exports = {
     name: "daily",
-    alias: ["dk"],
+    alias: ['dk'],
     category: "Economia",
     run: async (bot, message, args) =>{
         let cd = await cooldown.checkCoolDown(message.author.id, "cmd-economia-daily");
