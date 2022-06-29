@@ -1,10 +1,8 @@
 const config = require("./config.js");
 
 const Discord = require('discord.js');
-const { Collection } = require('discord.js');
+const { Collection, MessageEmbed } = require('discord.js');
 const bot = new Discord.Client();
-
-const { MessageEmbed } = require('discord.js');
 
 const fs = require('fs');
 const { readdirSync } = require('fs');
